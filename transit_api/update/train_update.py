@@ -5,15 +5,9 @@ from .ping_mbta_api import ping_mbta_api
 def update_train_info(if_modified_since0, if_modified_since1):
     trains0, last_modified0 = ping_mbta_api('https://api-v3.mbta.com/vehicles/?filter%5Broute_type%5D=0', if_modified_since0)
     trains1, last_modified1 = ping_mbta_api('https://api-v3.mbta.com/vehicles/?filter%5Broute_type%5D=1', if_modified_since1)
-    trains = []
-    if len(trains0) == 0 and len(trains1) == 0:
+    trains = trains0 + trains1
+    if trains == []:
         return last_modified0, last_modified1
-    elif len(trains0) == 0:
-        trains = trains1 
-    elif len(trains1) == 0:
-        trains = trains0 
-    else:
-        trains = trains1 = trains0
     for train in trains:
         train_id = train['id']
         train_info = train['attributes']
