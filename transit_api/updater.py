@@ -6,7 +6,7 @@ from .update.train_update import update_train_info
 
 UPDATE_INTERVAL_STOP =  86400 # daily
 UPDATE_INTERVAL_LINE = 86400 # daily
-UPDATE_INTERVAL_TRAIN =  20 # 15 seconds
+UPDATE_INTERVAL_TRAIN =  15 # 15 seconds
 
 UPDATE_LINE_INFO_LAST_MOD = None
 UDPATE_STOP_INFO_LAST_MOD = None

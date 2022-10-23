@@ -82,7 +82,7 @@ class LineDetail(APIView):
     http_method_names = ['get']
 
     def get(self, request, line_id):
-        line = line.object.get(id=line_id)
+        line = Line.object.get(id=line_id)
         if not line:
             return Response(
                 {},
