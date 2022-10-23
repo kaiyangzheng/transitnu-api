@@ -7,7 +7,7 @@ def update_train_info(if_modified_since0, if_modified_since1):
     trains1, last_modified1 = ping_mbta_api('https://api-v3.mbta.com/vehicles/?filter%5Broute_type%5D=1', if_modified_since1)
     trains = []
     if len(trains0) == 0 and len(trains1) == 0:
-        return last_modified0
+        return last_modified0, last_modified1
     elif len(trains0) == 0:
         trains = trains1 
     elif len(trains1) == 0:
