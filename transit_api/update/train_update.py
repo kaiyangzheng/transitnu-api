@@ -52,6 +52,8 @@ def update_train_info(if_modified_since0, if_modified_since1):
             )
             new_train.save()
         else:
+            print(train_ids)
+            print(train_db[0].id)
             if (train_db[0].id not in train_ids):
                 train_db.delete()
             else:
