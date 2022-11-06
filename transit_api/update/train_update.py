@@ -52,26 +52,24 @@ def update_train_info(if_modified_since0, if_modified_since1):
             )
             new_train.save()
         else:
-            print(train_ids)
-            print(train_db[0].id)
-            print(train_db[0].direction_id)
-            if (train_db[0].id not in train_ids):
-                train_db.delete()
-            else:
-                train_db.update(
-                    line = line_serializer.data,
-                    location = {
-                        'longitude': train_info['longitude'],
-                        'latitude': train_info['latitude'],
-                        'bearing': train_info['bearing']
-                    },
-                    status = train_info['current_status'],
-                    stop = stop_serializer.data,
-                    occupancy = train_info['occupancy_status'],
-                    speed = train_info['speed'],
-                    direction_id = train_info['direction_id'],
-                    last_update = train_info['updated_at']
-                )
+            train_db.update(
+                line = line_serializer.data,
+                location = {
+                    'longitude': train_info['longitude'],
+                    'latitude': train_info['latitude'],
+                    'bearing': train_info['bearing']
+                },
+                status = train_info['current_status'],
+                stop = stop_serializer.data,
+                occupancy = train_info['occupancy_status'],
+                speed = train_info['speed'],
+                direction_id = train_info['direction_id'],
+                last_update = train_info['updated_at']
+            )
+    trains = Train.objects.all()
+    for train in trains:
+        if (train.id not in train_ids):
+            train.delte()
     return last_modified0, last_modified1 
 
 
