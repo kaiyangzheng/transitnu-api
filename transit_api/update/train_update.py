@@ -8,6 +8,9 @@ def update_train_info(if_modified_since0, if_modified_since1):
     trains = trains0 + trains1
     if trains == []:
         return last_modified0, last_modified1
+    train_ids = []
+    for train in trains:
+        train_ids.append(train['id'])
     for train in trains:
         train_id = train['id']
         train_info = train['attributes']
@@ -49,20 +52,23 @@ def update_train_info(if_modified_since0, if_modified_since1):
             )
             new_train.save()
         else:
-            train_db.update(
-                line = line_serializer.data,
-                location = {
-                    'longitude': train_info['longitude'],
-                    'latitude': train_info['latitude'],
-                    'bearing': train_info['bearing']
-                },
-                status = train_info['current_status'],
-                stop = stop_serializer.data,
-                occupancy = train_info['occupancy_status'],
-                speed = train_info['speed'],
-                direction_id = train_info['direction_id'],
-                last_update = train_info['updated_at']
-            )
+            if (train_db.id not in train_ids):
+                train_db.delete()
+            else:
+                train_db.update(
+                    line = line_serializer.data,
+                    location = {
+                        'longitude': train_info['longitude'],
+                        'latitude': train_info['latitude'],
+                        'bearing': train_info['bearing']
+                    },
+                    status = train_info['current_status'],
+                    stop = stop_serializer.data,
+                    occupancy = train_info['occupancy_status'],
+                    speed = train_info['speed'],
+                    direction_id = train_info['direction_id'],
+                    last_update = train_info['updated_at']
+                )
     return last_modified0, last_modified1 
 
 
