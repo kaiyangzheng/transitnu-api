@@ -44,6 +44,7 @@ def update_train_info(if_modified_since0, if_modified_since1):
                 stop = stop_serializer.data,
                 occupancy = train_info['occupancy_status'],
                 speed = train_info['speed'],
+                direction_id = train_info['direction_id'],
                 last_update = train_info['updated_at']
             )
             new_train.save()
@@ -59,6 +60,7 @@ def update_train_info(if_modified_since0, if_modified_since1):
                 stop = stop_serializer.data,
                 occupancy = train_info['occupancy_status'],
                 speed = train_info['speed'],
+                direction_id = train_info['direction_id'],
                 last_update = train_info['updated_at']
             )
     return last_modified0, last_modified1 

@@ -31,6 +31,7 @@ class Train(models.Model):
     stop = models.JSONField(null=True)
     occupancy = models.CharField(max_length=255, null=True)
     speed = models.FloatField(null=True)
+    direction_id = models.IntegerField(null=True)
     last_update = models.DateTimeField()
 
     def __str__(self):
