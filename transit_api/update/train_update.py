@@ -69,7 +69,7 @@ def update_train_info(if_modified_since0, if_modified_since1):
     trains = Train.objects.all()
     for train in trains:
         if (train.id not in train_ids):
-            train.delte()
+            train.delete()
     return last_modified0, last_modified1 
 
 
