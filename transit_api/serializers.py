@@ -6,7 +6,7 @@ from .models import Line
 class TrainSerializer(serializers.ModelSerializer):
     class Meta:
         model = Train
-        fields = ('id', 'line', 'location', 'status', 'stop', 'occupancy', 'speed', 'direction_id', 'last_update')
+        fields = ('id', 'line', 'location', 'status', 'stop', 'trip', 'occupancy', 'speed', 'direction_id', 'last_update')
 
 class StopSerializer(serializers.ModelSerializer):
     class Meta:

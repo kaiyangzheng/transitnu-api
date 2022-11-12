@@ -16,6 +16,7 @@ def update_train_info(if_modified_since0, if_modified_since1):
         train_info = train['attributes']
         train_rels = train['relationships']
         stop_data = train_rels['stop']['data']
+        trip_data = train_rels['trip']['data']
         line_data = train_rels['route']['data']
         stop = None 
         if stop_data:
@@ -45,6 +46,7 @@ def update_train_info(if_modified_since0, if_modified_since1):
                 },
                 status = train_info['current_status'],
                 stop = stop_serializer.data,
+                trip = trip_data['id'],
                 occupancy = train_info['occupancy_status'],
                 speed = train_info['speed'],
                 direction_id = train_info['direction_id'],
@@ -61,6 +63,7 @@ def update_train_info(if_modified_since0, if_modified_since1):
                 },
                 status = train_info['current_status'],
                 stop = stop_serializer.data,
+                trip = trip_data['id'],
                 occupancy = train_info['occupancy_status'],
                 speed = train_info['speed'],
                 direction_id = train_info['direction_id'],
