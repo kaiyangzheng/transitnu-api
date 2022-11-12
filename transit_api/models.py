@@ -29,8 +29,6 @@ class Train(models.Model):
     location = models.JSONField()
     status = models.CharField(max_length=255, null=True)
     stop = models.JSONField(null=True)
-    trip = models.CharField(max_length=255, null=True)
-    predictions = models.JSONField(null=True)
     occupancy = models.CharField(max_length=255, null=True)
     speed = models.FloatField(null=True)
     direction_id = models.IntegerField(null=True)
