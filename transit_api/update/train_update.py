@@ -32,9 +32,18 @@ def update_train_info(if_modified_since):
             else:
                 line = None
         line_serializer = LineSerializer(line)
-        # predictions = None
-        # if trip_data:
-        #     trip = ping_mbta_api(
+        predictions = []
+        if trip_data:
+            trip_id = trip_data['id']
+            trip_predictions, last_modified_prediction = ping_mbta_api(f'https://api-v3.mbta.com/predictions?filter[trip]={trip_id}', if_modified_since)
+            for prediction in trip_predictions:
+                predict_stop = Stop.objects.filter(id=prediction['relationships']['stop']['data']['id'])
+                predict_stop_serializer = StopSerializer(predict_stop)
+                predictions.append({
+                    'arrival_time': prediction['attributes']['arrival_time'],
+                    'departure_time': prediction['attributes']['departure_time'],
+                    'stop': predict_stop_serializer.data
+                })
         train_db = Train.objects.filter(id=train_id)
         if not train_db:
             new_train = Train(
@@ -48,6 +57,7 @@ def update_train_info(if_modified_since):
                 status = train_info['current_status'],
                 stop = stop_serializer.data,
                 trip = trip_data['id'],
+                predictions = predictions,
                 occupancy = train_info['occupancy_status'],
                 speed = train_info['speed'],
                 direction_id = train_info['direction_id'],
@@ -65,6 +75,7 @@ def update_train_info(if_modified_since):
                 status = train_info['current_status'],
                 stop = stop_serializer.data,
                 trip = trip_data['id'],
+                predictions = predictions,
                 occupancy = train_info['occupancy_status'],
                 speed = train_info['speed'],
                 direction_id = train_info['direction_id'],
@@ -74,7 +85,7 @@ def update_train_info(if_modified_since):
     for train in trains:
         if (train.id not in train_ids):
             train.delete()
-    return last_modified0, last_modified1 
+    return last_modified
 
 
 
