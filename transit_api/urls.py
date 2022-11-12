@@ -8,6 +8,6 @@ urlpatterns = [
     path('stop/', StopList.as_view(), name="stop-list"),
     path('stop/<stop_id>', StopDetail.as_view(), name="stop-detail"),
     path('line/', LineList.as_view(), name="line-list"),
-    path('line/<line_id>', LineDetail.as_view(), name="line-detail")
+    path('line/<line_id>', LineDetail.as_view(), name="line-detail"),
 
 ]
