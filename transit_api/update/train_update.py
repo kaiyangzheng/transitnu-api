@@ -37,14 +37,17 @@ def update_train_info(if_modified_since):
             trip_id = trip_data['id']
             trip_predictions, last_modified_prediction = ping_mbta_api(f'https://api-v3.mbta.com/predictions?filter[trip]={trip_id}', if_modified_since)
             for prediction in trip_predictions:
-                print(prediction['relationships']['stop']['data']['id'])
-                predict_stop = Stop.objects.get(id=prediction['relationships']['stop']['data']['id'])
-                predict_stop_serializer = StopSerializer(predict_stop)
-                predictions.append({
-                    'arrival_time': prediction['attributes']['arrival_time'],
-                    'departure_time': prediction['attributes']['departure_time'],
-                    'stop': predict_stop_serializer.data
-                })
+                station_id = prediction['relationships']['stop']['data']['id'])
+                try: 
+                    predict_stop = Stop.objects.get(id=station_id)
+                    predict_stop_serializer = StopSerializer(predict_stop)
+                    predictions.append({
+                        'arrival_time': prediction['attributes']['arrival_time'],
+                        'departure_time': prediction['attributes']['departure_time'],
+                        'stop': predict_stop_serializer.data
+                    })
+                except:
+                    print(f'Couldn\' find station: {station_id}')
         train_db = Train.objects.filter(id=train_id)
         if not train_db:
             new_train = Train(
