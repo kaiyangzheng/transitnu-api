@@ -26,8 +26,7 @@ def start():
                 last_modified = update_stop_info(UDPATE_STOP_INFO_LAST_MOD)
                 UDPATE_STOP_INFO_LAST_MOD = last_modified
             if (job.name == 'update_train_info'):
-                global UPDATE_TRAIN_INFO_LAST_MOD1
-                global UPDATE_TRAIN_INFO_LAST_MOD2
+                global UPDATE_TRAIN_INFO_LAST_MOD
                 last_modified = update_train_info(UPDATE_TRAIN_INFO_LAST_MOD)
                 UPDATE_TRAIN_INFO_LAST_MOD = last_modified
 
