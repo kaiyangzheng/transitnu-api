@@ -37,6 +37,7 @@ def update_train_info(if_modified_since):
             trip_id = trip_data['id']
             trip_predictions, last_modified_prediction = ping_mbta_api(f'https://api-v3.mbta.com/predictions?filter[trip]={trip_id}', if_modified_since)
             for prediction in trip_predictions:
+                print(prediction['relationships']['stop']['data']['id'])
                 predict_stop = Stop.objects.get(id=prediction['relationships']['stop']['data']['id'])
                 predict_stop_serializer = StopSerializer(predict_stop)
                 predictions.append({
