@@ -3,7 +3,7 @@ from ..serializers import LineSerializer
 from .ping_mbta_api import ping_mbta_api
 
 def update_stop_info(if_modified_since):
-    stops, last_modified = ping_mbta_api("https://api-v3.mbta.com/stops", if_modified_since)
+    stops, last_modified = ping_mbta_api("https://api-v3.mbta.com/stops?filter%5Broute_type%5D=0,1", if_modified_since)
     if (len(stops)) == 0:
         return last_modified
     for stop in stops:
