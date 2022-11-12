@@ -2,12 +2,10 @@ from ..models import Train, Stop, Line
 from ..serializers import StopSerializer, LineSerializer
 from .ping_mbta_api import ping_mbta_api
 
-def update_train_info(if_modified_since0, if_modified_since1):
-    trains0, last_modified0 = ping_mbta_api('https://api-v3.mbta.com/vehicles/?filter%5Broute_type%5D=0', if_modified_since0)
-    trains1, last_modified1 = ping_mbta_api('https://api-v3.mbta.com/vehicles/?filter%5Broute_type%5D=1', if_modified_since1)
-    trains = trains0 + trains1
+def update_train_info(if_modified_since):
+    trains, last_modified = ping_mbta_api('https://api-v3.mbta.com/vehicles/?filter%5Broute_type%5D=0,1', if_modified_since)
     if trains == []:
-        return last_modified0, last_modified1
+        return last_modified
     train_ids = []
     for train in trains:
         train_ids.append(train['id'])
@@ -34,6 +32,9 @@ def update_train_info(if_modified_since0, if_modified_since1):
             else:
                 line = None
         line_serializer = LineSerializer(line)
+        # predictions = None
+        # if trip_data:
+        #     trip = ping_mbta_api(
         train_db = Train.objects.filter(id=train_id)
         if not train_db:
             new_train = Train(
