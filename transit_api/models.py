@@ -29,6 +29,7 @@ class Train(models.Model):
     location = models.JSONField()
     status = models.CharField(max_length=255, null=True)
     stop = models.JSONField(null=True)
+    trip = models.CharField(max_length=255, null=True)
     occupancy = models.CharField(max_length=255, null=True)
     speed = models.FloatField(null=True)
     direction_id = models.IntegerField(null=True)
@@ -36,3 +37,14 @@ class Train(models.Model):
 
     def __str__(self):
         return self.id
+
+class Prediction(models.Model):
+    id = models.AutoField(primary_key=True)
+    trip_id = models.CharField(max_length=255, null=True)
+    vehicle_id = models.CharField(max_length=255, null=True)
+    stop_id = models.CharField(max_length=255, null=True)
+    arrival_time = models.CharField(max_length=255, null=True)
+    departure_time = models.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return self.trip_id + self.vehicle_id + self.stop_id
