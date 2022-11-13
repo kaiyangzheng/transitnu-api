@@ -4,14 +4,14 @@ from .update.line_update import update_line_info
 from .update.stop_update import update_stop_info
 from .update.train_update import update_train_info
 
-# UPDATE_INTERVAL_STOP =  86400 # daily
-# UPDATE_INTERVAL_LINE = 86400 # daily
-# UPDATE_INTERVAL_TRAIN =  15 # 15 seconds
+UPDATE_INTERVAL_STOP =  86400 # daily
+UPDATE_INTERVAL_LINE = 86400 # daily
+UPDATE_INTERVAL_TRAIN =  15 # 15 seconds
 
 
-UPDATE_INTERVAL_STOP =  15# daily
-UPDATE_INTERVAL_LINE = 15 # daily
-UPDATE_INTERVAL_TRAIN =  86400 # 15 seconds
+# UPDATE_INTERVAL_STOP =  15# daily
+# UPDATE_INTERVAL_LINE = 15 # daily
+# UPDATE_INTERVAL_TRAIN =  86400 # 15 seconds
 
 UPDATE_LINE_INFO_LAST_MOD = None
 UDPATE_STOP_INFO_LAST_MOD = None
