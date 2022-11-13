@@ -2,6 +2,16 @@ from ..models import Train, Stop, Line
 from ..serializers import StopSerializer, LineSerializer
 from .ping_mbta_api import ping_mbta_api
 
+stops, last_modified = ping_mbta_api('https://api-v3.mbta.com/stops', None)
+
+def get_parent_stop(stop_id):
+    global stops 
+    for stop in stops:
+        if stop['id'] == stop_id:
+            return stop['relationships']['parent_station']['data']['id']
+    return stop_id
+
+
 def update_train_info(if_modified_since):
     trains, last_modified = ping_mbta_api('https://api-v3.mbta.com/vehicles/?filter%5Broute_type%5D=0,1', if_modified_since)
     if trains == []:
@@ -17,7 +27,7 @@ def update_train_info(if_modified_since):
         line_data = train_rels['route']['data']
         stop = None 
         if stop_data:
-            stop = Stop.objects.filter(id=stop_data['id'])
+            stop = Stop.objects.filter(id=get_parent_stop(stop_data['id']))
             if stop.count() > 0:
                 stop = stop[0]
             else:
