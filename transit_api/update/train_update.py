@@ -1,4 +1,4 @@
-from ..models import Train, Stop, Line  
+from ..models import Train, Stop, Line, Prediction
 from ..serializers import StopSerializer, LineSerializer
 from .ping_mbta_api import ping_mbta_api
 from .helpers import get_parent_stop
@@ -10,13 +10,12 @@ def update_train_info(if_modified_since):
         return last_modified
     train_ids = []
     for train in trains:
-        train_ids.append(train['id'])
-    for train in trains:
         train_id = train['id']
         train_info = train['attributes']
         train_rels = train['relationships']
         stop_data = train_rels['stop']['data']
         line_data = train_rels['route']['data']
+        train_ids.append(train_id)
         stop = None 
         if stop_data:
             stop = Stop.objects.filter(id=get_parent_stop(stop_data['id']))
@@ -72,6 +71,39 @@ def update_train_info(if_modified_since):
     for train in trains:
         if (train.id not in train_ids):
             train.delete()
+
+    prediction_ids = []
+    for train in trains:
+        trip_id = train.trip
+        predictions, last_modified = ping_mbta_api(f'https://api-v3.mbta.com/predictions?filter[trip]={trip_id}', None)
+        for prediction in predictions:
+            prediction_info = prediction['attributes']
+            prediction_rels = prediction['relationships']
+            prediction_stop = get_parent_stop(prediction_rels['stop']['data']['id'])
+            prediction_trip = prediction_rels['trip']['data']['id']
+            prediction_vehicle = prediction_rels['vehicle']['data']['id']
+            prediction_ids.append(
+                [prediction_trip, prediction_vehicle, prediction_stop]
+            )
+            prediction_db = Prediction.objects.filter(trip_id=prediction_trip, vehicle_id=prediction_vehicle, stop_id=prediction_stop)
+            if not prediction_db:
+                new_prediction = Prediction(
+                    trip_id=prediction_trip,
+                    vehicle_id=prediction_vehicle,
+                    stop_id=prediction_stop,
+                    arrival_time=prediction_info['arrival_time'],
+                    departure_time=prediction_info['departure_time']
+                )
+                new_prediction.save()
+            else:
+                prediction_db.update(
+                    arrival_time=prediction_info['arrival_time'],
+                    departure_time=prediction_info['departure_time']
+                )
+    prediction = Prediction.objects.all()
+    for predictions in prediction:
+        if [prediction.trip_id, prediction.vehicle_id, prediction.stop_id] not in prediction_ids:
+            prediction.delete()
     return last_modified
 
 
