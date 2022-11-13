@@ -100,8 +100,8 @@ def update_train_info(if_modified_since):
                     arrival_time=prediction_info['arrival_time'],
                     departure_time=prediction_info['departure_time']
                 )
-    prediction = Prediction.objects.all()
-    for predictions in prediction:
+    predictions = Prediction.objects.all()
+    for prediction in predictions:
         if [prediction.trip_id, prediction.vehicle_id, prediction.stop_id] not in prediction_ids:
             prediction.delete()
     return last_modified
