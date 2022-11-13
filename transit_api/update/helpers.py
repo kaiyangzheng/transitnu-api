@@ -1,3 +1,5 @@
+from .ping_mbta_api import ping_mbta_api
+
 stops, last_modified = ping_mbta_api('https://api-v3.mbta.com/stops', None)
 
 def get_parent_stop(stop_id):
