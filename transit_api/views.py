@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from .models import Train, Stop, Line
-from .serializers import LineSerializer, TrainSerializer, StopSerializer
+from .models import Train, Stop, Line, Prediction
+from .serializers import LineSerializer, TrainSerializer, StopSerializer, PredictionSerializer
 
 class TrainList(APIView):  
     permission_classes = [permissions.AllowAny]
@@ -90,3 +90,49 @@ class LineDetail(APIView):
             )
         serializer = LineSerializer(line)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class PredictionList(APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = PredictionSerializer
+    http_method_names = ['get']
+
+    def get(self, request):
+        predictions = Prediction.objects.all()
+        serializer = PredictionSerializer(predictions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class PredictionDetail(APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = PredictionSerializer
+    http_method_names = ['get']
+
+    def get(self, request, prediction_id):
+        prediction = Prediction.objects.get(id=prediction_id)
+        if not prediction: 
+            return Response(
+                {},
+                status = status.HTTP_400_BAD_REQUEST
+            )
+        serializer = PredictionSerializer(prediction)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class PredictionByTrain(APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = PredictionSerializer
+    http_method_names = ['get']
+
+    def get(self, request, train_id):
+        predictions = Prediction.objects.filter(vehicle_id=train_id)
+        serializer = PredictionSerializer(predictions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class PredictionByStop(APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = PredictionSerializer
+    http_method_names = ['get']
+
+    def get(self, request, stop_id):
+        predictions = Prediction.objects.filter(stop_id=stop_id)
+        serializer = PredictionSerializer(predictions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    

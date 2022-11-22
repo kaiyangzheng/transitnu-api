@@ -47,4 +47,4 @@ class Prediction(models.Model):
     departure_time = models.CharField(max_length=255, null=True)
 
     def __str__(self):
-        return self.trip_id + self.vehicle_id + self.stop_id
+        return self.trip_id + '-' + self.vehicle_id + '-' + '-' + self.stop_id
