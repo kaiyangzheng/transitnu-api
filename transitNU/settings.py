@@ -143,4 +143,4 @@ DISABLE_SERVER_SIDE_CURSORS = True
 
 import django_heroku
 django_heroku.settings(locals())
-
+del DATABASES['default']['OPTIONS']['sslmode']
