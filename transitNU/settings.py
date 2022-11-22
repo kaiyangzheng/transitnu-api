@@ -139,7 +139,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://transitnu-api.herokuapp.com',  
 ]
 
+DISABLE_SERVER_SIDE_CURSORS = True 
+
 import django_heroku
 django_heroku.settings(locals())
 
-DISABLE_SERVER_SIDE_CURSORS = True
