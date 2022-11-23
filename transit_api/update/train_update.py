@@ -1,5 +1,5 @@
 from ..models import Train, Stop, Line, Prediction
-from ..serializers import StopSerializer, LineSerializer
+from ..serializers import StopSerializer, LineSerializer, TrainSerializer
 from .ping_mbta_api import ping_mbta_api
 from .helpers import get_parent_stop
 
@@ -79,24 +79,40 @@ def update_train_info(if_modified_since):
         for prediction in predictions:
             prediction_info = prediction['attributes']
             prediction_rels = prediction['relationships']
-            prediction_stop = get_parent_stop(prediction_rels['stop']['data']['id'])
-            prediction_trip = prediction_rels['trip']['data']['id']
-            prediction_vehicle = prediction_rels['vehicle']['data']['id']
+            prediction_stop_id = get_parent_stop(prediction_rels['stop']['data']['id'])
+            prediction_trip_id = prediction_rels['trip']['data']['id']
+            prediction_vehicle_id = prediction_rels['vehicle']['data']['id']
             prediction_ids.append(
-                [prediction_trip, prediction_vehicle, prediction_stop]
+                [prediction_trip_id, prediction_vehicle_id, prediction_stop_id]
             )
-            prediction_db = Prediction.objects.filter(trip_id=prediction_trip, vehicle_id=prediction_vehicle, stop_id=prediction_stop)
+            prediction_db = Prediction.objects.filter(trip_id=prediction_trip_id, vehicle_id=prediction_vehicle_id, stop_id=prediction_stop_id)
+            prediction_vehicle = Train.objects.filter(id=prediction_vehicle_id)
+            prediction_stop = Stop.objects.filter(id=prediction_stop_id)
+            if (prediction_vehicle.count() > 0):
+                prediction_vehicle = prediction_vehicle[0]
+            else:
+                prediction_vehicle = None 
+            if (prediction_stop.count() > 0):
+                prediction_stop = prediction_stop[0]
+            else:
+                prediction_stop = None
+            prediction_vehicle_serializer = TrainSerializer(prediction_vehicle)
+            prediction_stop_serializer = StopSerializer(prediction_stop)
             if not prediction_db:
                 new_prediction = Prediction(
-                    trip_id=prediction_trip,
-                    vehicle_id=prediction_vehicle,
-                    stop_id=prediction_stop,
+                    trip_id=prediction_trip_id,
+                    vehicle_id=prediction_vehicle_id,
+                    stop_id=prediction_stop_id,
+                    vehicle = prediction_vehicle_serializer.data,
+                    stop = prediction_stop_serializer.data,
                     arrival_time=prediction_info['arrival_time'],
                     departure_time=prediction_info['departure_time']
                 )
                 new_prediction.save()
             else:
                 prediction_db.update(
+                    vehicle = prediction_vehicle_serializer.data,
+                    stop = prediction_stop_serializer.data,
                     arrival_time=prediction_info['arrival_time'],
                     departure_time=prediction_info['departure_time']
                 )

@@ -43,6 +43,8 @@ class Prediction(models.Model):
     trip_id = models.CharField(max_length=255, null=True)
     vehicle_id = models.CharField(max_length=255, null=True)
     stop_id = models.CharField(max_length=255, null=True)
+    vehicle = models.JSONField()
+    stop = models.JSONField()
     arrival_time = models.CharField(max_length=255, null=True)
     departure_time = models.CharField(max_length=255, null=True)
 

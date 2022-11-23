@@ -19,4 +19,4 @@ class LineSerializer(serializers.ModelSerializer):
 class PredictionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prediction
-        fields = ('trip_id', 'vehicle_id', 'stop_id', 'arrival_time', 'departure_time')
+        fields = ('trip_id', 'vehicle_id', 'stop_id', 'vehicle', 'stop', 'arrival_time', 'departure_time')
